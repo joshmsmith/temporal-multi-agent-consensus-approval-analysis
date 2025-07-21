@@ -109,9 +109,7 @@ Absolutely — here's a Markdown-formatted **Cosmos Package Policy Proposal** fo
 
 ---
 
-## 6. ✅ Recommendation
-
-We **conditionally approved** this policy with the following urgent recommendations:
+## 6. Insurability Remediations
 
 * Immediate retrofitting of thermal exhaust systems with particle shielding
 * Background screening of all contractors (especially those named “Galen”)

@@ -108,9 +108,7 @@ Absolutely! Here's the updated Markdown insurance proposal for the *Millennium F
 
 ---
 
-## 6. ✅ Recommendation
-
-We **recommend acceptance** of this proposal with the inclusion of the following underwriting stipulations:
+## 6. Insurability Remediations
 
 * Monthly maintenance check reports filed with Cosmos Outer Rim HQ.
 * No hyperspace jumps through restricted sectors without authorization.

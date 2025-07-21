@@ -108,9 +108,7 @@ Absolutely! Here's a Markdown-formatted **Cosmos Package Policy** insurance prop
 
 ---
 
-## 6. ✅ Recommendation
-
-We **recommend conditional approval** of this policy pending:
+## 6. Insurability Remediations
 
 * Full crew manifest disclosure
 * Inspection of concealed compartments by certified Cosmos Officer

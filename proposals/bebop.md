@@ -109,9 +109,7 @@ Of course! Here's a Markdown-formatted **Cosmos Package Policy** insurance propo
 
 ---
 
-## 6. ✅ Recommendation
-
-We **provisionally approve** this policy with the following conditions:
+## 6. Insurability Remediations
 
 * Regular behavioral evaluation for onboard AI and crew members
 * Crew must provide updated bounty logs quarterly
