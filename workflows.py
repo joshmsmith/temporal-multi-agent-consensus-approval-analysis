@@ -47,3 +47,7 @@ class ConsensusUnderwritingAnalysisWorkflow:
         details += f"- **Last Status Set:** {workflow.now().isoformat()}\n"
         workflow.set_current_details(details)
         workflow.logger.debug(f"Workflow status set to: {status}")
+
+        
+# todo add a workflow to generate more proposals
+# todo add a workflow or mcp  to get all the proposals assigned to me
