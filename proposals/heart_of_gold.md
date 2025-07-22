@@ -10,7 +10,7 @@ Absolutely! Here's a **Cosmos Package Policy Proposal** in Markdown format for t
 
 #### Owner: **Zaphod Beeblebrox (allegedly)**
 
-#### Policy Number: `CSP-42-HOG`
+#### Proposal Number: `CSP-42-HOG`
 
 #### Proposal Date: July 21, 2025
 
@@ -88,7 +88,7 @@ Absolutely! Here's a **Cosmos Package Policy Proposal** in Markdown format for t
 
 ---
 
-## 5. 💰 Premium Estimate
+## 5. 💰 Premium Estimate at Standard Rate Tier
 
 | Component                       | Annual Premium (Credits) |
 | ------------------------------- | ------------------------ |

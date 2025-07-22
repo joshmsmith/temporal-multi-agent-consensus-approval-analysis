@@ -10,7 +10,7 @@ Absolutely — here's a Markdown-formatted **Cosmos Package Policy Proposal** fo
 
 #### Owner: **Galactic Empire**
 
-#### Policy Number: `CSP-0001-DS1`
+#### Proposal Number: `CSP-0001-DS1`
 
 #### Proposal Date: July 21, 2025
 
@@ -93,7 +93,7 @@ Absolutely — here's a Markdown-formatted **Cosmos Package Policy Proposal** fo
 
 ---
 
-## 5. 💰 Premium Estimate
+## 5. 💰 Premium Estimate at Standard Rate Tier
 
 | Component                    | Annual Premium (Credits) |
 | ---------------------------- | ------------------------ |

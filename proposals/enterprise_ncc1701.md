@@ -10,7 +10,7 @@ Certainly! Here's a Markdown-formatted **Cosmos Package Policy Proposal** for th
 
 #### Owner: **United Federation of Planets / Starfleet Command**
 
-#### Policy Number: `CSP-2265-ENTERPRISE`
+#### Proposal Number: `CSP-2265-ENTERPRISE`
 
 #### Proposal Date: July 21, 2025
 
@@ -93,7 +93,7 @@ Certainly! Here's a Markdown-formatted **Cosmos Package Policy Proposal** for th
 
 ---
 
-## 5. 💰 Premium Estimate
+## 5. 💰 Premium Estimate at Standard Rate Tier
 
 | Component                   | Annual Premium (Credits) |
 | --------------------------- | ------------------------ |

@@ -27,11 +27,13 @@ class ConsensusUnderwritingAnalysisWorkflow:
         self.context["metadata"] = inputs.get("metadata", {})
         workflow.logger.debug(f"Starting repair workflow with inputs: {inputs}")
 
-        #todo trigger three analysis
+        #todo trigger three analyses
+        #step 1: activity that does analysis, inputs: prompt, LLM model (Or model #, do in a loop?), outputs: rate tier and confidence score
 
         #todo do analysis
 
         #todo do summary
+        #include rate adjustment?
 
         return "ANALYZED!"
 

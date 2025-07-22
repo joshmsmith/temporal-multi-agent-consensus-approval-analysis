@@ -10,7 +10,7 @@ Absolutely! Here's the updated Markdown insurance proposal for the *Millennium F
 
 #### Owner: **Captain Han Solo**
 
-#### Policy Number: `CSP-1138-FALCON`
+#### Proposal Number: `CSP-1138-FALCON`
 
 #### Proposal Date: July 21, 2025
 
@@ -93,7 +93,7 @@ Absolutely! Here's the updated Markdown insurance proposal for the *Millennium F
 
 ---
 
-## 5. 💰 Premium Estimate
+## 5. 💰 Premium Estimate at Standard Rate Tier
 
 | Component                   | Annual Premium (Credits) |
 | --------------------------- | ------------------------ |

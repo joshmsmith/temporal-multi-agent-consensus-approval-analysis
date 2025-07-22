@@ -32,6 +32,8 @@ async def Underwrite(inputs: Dict[str, str]) -> Dict[str, str]:
     """Start the underwriting agent to analyze a proposal."""
     
     load_dotenv(override=True)
+    
+    #todo: get user name as input from the user
     user = os.environ.get("USER_NAME", "Agent.Smith") 
     client = await get_temporal_client()
 
