@@ -10,7 +10,7 @@ Absolutely! Here's a Markdown-formatted **Cosmos Package Policy** insurance prop
 
 #### Owner: **Captain Malcolm Reynolds**
 
-#### Policy Number: `CSP-2517-SERENITY`
+#### Proposal Number: `CSP-2517-SERENITY`
 
 #### Proposal Date: July 21, 2025
 
@@ -93,7 +93,7 @@ Absolutely! Here's a Markdown-formatted **Cosmos Package Policy** insurance prop
 
 ---
 
-## 5. 💰 Premium Estimate
+## 5. 💰 Premium Estimate at Standard Rate Tier
 
 | Component                   | Annual Premium (Credits) |
 | --------------------------- | ------------------------ |

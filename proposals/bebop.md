@@ -10,7 +10,7 @@ Of course! Here's a Markdown-formatted **Cosmos Package Policy** insurance propo
 
 #### Owner: **Captain Jet Black**
 
-#### Policy Number: `CSP-2071-BEBOP`
+#### Proposal Number: `CSP-2071-BEBOP`
 
 #### Proposal Date: July 21, 2025
 
@@ -92,8 +92,7 @@ Of course! Here's a Markdown-formatted **Cosmos Package Policy** insurance propo
 * Claims during hallucination episodes or surreal dream sequences
 
 ---
-
-## 5. 💰 Premium Estimate
+## 5. 💰 Premium Estimate at Standard Rate Tier
 
 | Component                   | Annual Premium (Credits) |
 | --------------------------- | ------------------------ |
