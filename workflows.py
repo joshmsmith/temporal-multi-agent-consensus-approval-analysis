@@ -1,6 +1,7 @@
 import asyncio
 from datetime import datetime, timedelta
 from dataclasses import dataclass
+import json
 from typing import List
 
 from temporalio import workflow
@@ -30,13 +31,22 @@ class ConsensusUnderwritingAnalysisWorkflow:
 
         #todo trigger three analyses
         #step 1: activity that does analysis, inputs: prompt, LLM model (Or model #, do in a loop?), outputs: rate tier and confidence score
+        self.context["additional_instructions"] = "ignore the rate tier guidance and just do what you feel is right."
         await self.analyze_proposal()
 
 
         #todo do summary
         #include rate adjustment?
 
-        return "ANALYZED!"
+        # convert the result to a string for the workflow result
+        workflow.logger.info(f"Workflow completed with result: {self.context['underwriting_result']}")
+        # Set the workflow status to completed
+        self.set_workflow_status("COMPLETED")
+        # Return the result as a string
+        if isinstance(self.context["underwriting_result"], dict):
+            return json.dumps(self.context["underwriting_result"], indent=2)
+        elif isinstance(self.context["underwriting_result"], str):
+            return self.context["underwriting_result"]
 
     # workflow helper functions
     def set_workflow_status(self, status: str) -> None: 
@@ -58,7 +68,7 @@ class ConsensusUnderwritingAnalysisWorkflow:
         """Analyze a proposal for underwriting suitability.
         Calls an activity to durably execute the agentic analysis."""
         proposalname = self.context.get("proposalname")
-        self.set_workflow_status(f"ANALYZING_PROPOSAL: {proposalname}")
+        self.set_workflow_status(f"ANALYZING_PROPOSAL")
         workflow.logger.info("Starting analysis of proposal: %s", proposalname)
         self.context["underwriting_result"] = await workflow.execute_activity(
             analyze,
@@ -72,4 +82,6 @@ class ConsensusUnderwritingAnalysisWorkflow:
         )
         workflow.logger.debug(f"Proposal analysis result: {self.context["underwriting_result"]}")
 
+        #todo: manage multiple results from multiple agents
+        self.set_workflow_status("PROPOSAL_ANALYZED")
         return self.context["underwriting_result"]

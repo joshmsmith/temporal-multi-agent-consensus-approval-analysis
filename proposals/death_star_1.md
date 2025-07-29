@@ -1,7 +1,3 @@
-Absolutely — here's a Markdown-formatted **Cosmos Package Policy Proposal** for the **First Death Star** (DS-1 Orbital Battle Station). Yes, we insured it… though next time, maybe close the thermal exhaust port.
-
----
-
 # 🌑 Cosmos Insurance
 
 ### *Cosmos Package Policy Proposal*

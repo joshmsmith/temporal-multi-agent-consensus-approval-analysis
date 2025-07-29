@@ -9,8 +9,8 @@ from dotenv import load_dotenv
 import argparse
 parser = argparse.ArgumentParser(description="Run the repair agent workflow.")
 parser.add_argument(
-    "--proposalname",
-    action="store_true",
+    "proposalname",
+    type=str,
     default="bebop",
     help="Proposal name to analyze.",
 )
@@ -21,7 +21,8 @@ async def main(proposalname: str) -> None:
     
     # Load environment variables
     load_dotenv(override=True)
-    user = os.environ.get("USER_NAME", "Harry.Potter") 
+    user = os.environ.get("USER_NAME", "Spike.Spiegel") 
+    print(f"Running proposal analysis for {user} on proposal: {proposalname}")
     # Create client connected to server at the given address
     client = await get_temporal_client()
 
