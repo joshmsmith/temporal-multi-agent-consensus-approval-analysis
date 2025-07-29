@@ -36,7 +36,7 @@ async def run_worker() -> None:
     worker = Worker(
         client,
         task_queue=TEMPORAL_TASK_QUEUE,
-        workflows=[],
+        workflows=[ConsensusUnderwritingAnalysisWorkflow],
         activities=[activities.analyze],
     )
     print(f"Starting worker...")

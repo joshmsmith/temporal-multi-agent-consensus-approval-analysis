@@ -8,7 +8,7 @@ from temporalio.common import RetryPolicy
 from temporalio.exceptions import ActivityError, ApplicationError
 
 with workflow.unsafe.imports_passed_through():
-    from activities import analyze, detect, plan_repair, notify, execute_repairs, report, single_tool_repair, process_order
+    from activities import analyze
 
 '''Workflow for multi-agent consensus/approval/analysis.
 This workflow coordinates multiple agents to analyze and discern about underwriting proposals.'''
@@ -25,12 +25,13 @@ class ConsensusUnderwritingAnalysisWorkflow:
         
         self.context["prompt"] = inputs.get("prompt", {})
         self.context["metadata"] = inputs.get("metadata", {})
+        self.context["proposalname"] = inputs.get("proposalname", "")
         workflow.logger.debug(f"Starting repair workflow with inputs: {inputs}")
 
         #todo trigger three analyses
         #step 1: activity that does analysis, inputs: prompt, LLM model (Or model #, do in a loop?), outputs: rate tier and confidence score
+        await self.analyze_proposal()
 
-        #todo do analysis
 
         #todo do summary
         #include rate adjustment?
@@ -51,3 +52,24 @@ class ConsensusUnderwritingAnalysisWorkflow:
         
 # todo add a workflow to generate more proposals
 # todo add a workflow or mcp  to get all the proposals assigned to me
+
+
+    async def analyze_proposal(self) -> dict:
+        """Analyze a proposal for underwriting suitability.
+        Calls an activity to durably execute the agentic analysis."""
+        proposalname = self.context.get("proposalname")
+        self.set_workflow_status(f"ANALYZING_PROPOSAL: {proposalname}")
+        workflow.logger.info("Starting analysis of proposal: %s", proposalname)
+        self.context["underwriting_result"] = await workflow.execute_activity(
+            analyze,
+            self.context,
+            start_to_close_timeout=timedelta(minutes=5),
+            retry_policy=RetryPolicy(
+                initial_interval=timedelta(seconds=1),
+                maximum_interval=timedelta(seconds=30),  
+            ),
+            heartbeat_timeout=timedelta(seconds=20),
+        )
+        workflow.logger.debug(f"Proposal analysis result: {self.context["underwriting_result"]}")
+
+        return self.context["underwriting_result"]
