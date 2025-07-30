@@ -1,7 +1,3 @@
-Absolutely! Here's the updated Markdown insurance proposal for the *Millennium Falcon*, now with **Agent Josh Smith** as the underwriter/contact:
-
----
-
 # 🚀 Cosmos Insurance
 
 ### *Cosmos Package Policy Proposal*

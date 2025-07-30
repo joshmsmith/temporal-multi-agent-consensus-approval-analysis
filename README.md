@@ -48,6 +48,17 @@ LLM_KEY=sk-proj-...
 poetry run python run_worker.py
 ```
 
+### Trigger Analysis!
+```bash
+poetry run python run_analysis.py # defaults to bebop
+```
+
+Or pass a proposal name in:
+```bash
+poetry run python run_analysis.py serenity
+```
+
+
 ## 2. Running
 
 This agent is:

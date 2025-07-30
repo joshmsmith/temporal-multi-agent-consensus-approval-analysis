@@ -1,7 +1,3 @@
-Of course! Here's a Markdown-formatted **Cosmos Package Policy** insurance proposal for the *Bebop* from *Cowboy Bebop*:
-
----
-
 # 🚀 Cosmos Insurance
 
 ### *Cosmos Package Policy Proposal*

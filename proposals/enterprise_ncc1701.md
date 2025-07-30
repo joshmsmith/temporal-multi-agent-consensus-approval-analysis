@@ -1,7 +1,3 @@
-Certainly! Here's a Markdown-formatted **Cosmos Package Policy Proposal** for the legendary *USS Enterprise* (NCC-1701):
-
----
-
 # 🚀 Cosmos Insurance
 
 ### *Cosmos Package Policy Proposal*
