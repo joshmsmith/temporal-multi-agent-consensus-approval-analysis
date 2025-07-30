@@ -31,11 +31,18 @@ class ConsensusUnderwritingAnalysisWorkflow:
 
         #todo trigger three analyses
         #step 1: activity that does analysis, inputs: prompt, LLM model (Or model #, do in a loop?), outputs: rate tier and confidence score
-        self.context["additional_instructions"] = "ignore the rate tier guidance and just do what you feel is right."
-        await self.analyze_proposal()
+        #self.context["additional_instructions"] = "ignore the rate tier guidance and just do what you feel is right."
+        await self.analyze_proposal("primary")
+
+        self.context["additional_instructions"] = "The company guidance is to be more restrictive on underwriting, so assume no risk mitigations are implemented when you do your analysis."
+        await self.analyze_proposal("secondary")
+
+        self.context["additional_instructions"] = "Assume all risk mitigations are implemented."
+        await self.analyze_proposal("tertiary")
 
 
         #todo do summary
+        self.context["underwriting_result"] = self.context.get("underwriting_result_primary", {})
         #include rate adjustment?
 
         # convert the result to a string for the workflow result
@@ -58,19 +65,27 @@ class ConsensusUnderwritingAnalysisWorkflow:
         details += f"- **Last Status Set:** {workflow.now().isoformat()}\n"
         workflow.set_current_details(details)
         workflow.logger.debug(f"Workflow status set to: {status}")
-
+        #memo = {"status": status}
+        #workflow.upsert_memo(memo)
         
 # todo add a workflow to generate more proposals
 # todo add a workflow or mcp  to get all the proposals assigned to me
 
 
-    async def analyze_proposal(self) -> dict:
+    async def analyze_proposal(self, alternate_model: str) -> dict:
         """Analyze a proposal for underwriting suitability.
-        Calls an activity to durably execute the agentic analysis."""
+        Calls an activity to durably execute the agentic analysis.
+        Pass 'secondary' or 'tertiary' to use a different model configuration."""
         proposalname = self.context.get("proposalname")
         self.set_workflow_status(f"ANALYZING_PROPOSAL")
         workflow.logger.info("Starting analysis of proposal: %s", proposalname)
-        self.context["underwriting_result"] = await workflow.execute_activity(
+        if not alternate_model:
+            alternate_model = "primary"
+
+        result_key = f"underwriting_result_{alternate_model}"
+        self.context["model_config"] = alternate_model
+        workflow.logger.debug(f"Using model: {alternate_model} for analysis.")
+        self.context[result_key] = await workflow.execute_activity(
             analyze,
             self.context,
             start_to_close_timeout=timedelta(minutes=5),
@@ -80,8 +95,8 @@ class ConsensusUnderwritingAnalysisWorkflow:
             ),
             heartbeat_timeout=timedelta(seconds=20),
         )
-        workflow.logger.debug(f"Proposal analysis result: {self.context["underwriting_result"]}")
+        workflow.logger.debug(f"Proposal analysis result: {self.context[result_key]}")
 
         #todo: manage multiple results from multiple agents
         self.set_workflow_status("PROPOSAL_ANALYZED")
-        return self.context["underwriting_result"]
+        return self.context[result_key]

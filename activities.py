@@ -31,10 +31,23 @@ async def analyze(input: dict) -> dict:
     
     # Use the LLM to detect issues in the orders
     # Get the LLM model and key from environment variables
-    llm_model = os.environ.get("LLM_MODEL", "openai/gpt-4")
-    llm_key = os.environ.get("LLM_KEY")
+    model_config = input.get("model_config", "primary")
+    if model_config == "secondary":
+        llm_model = os.environ.get("SECONDARY_LLM_MODEL")
+        llm_key = os.environ.get("SECONDARY_LLM_KEY")
+    elif model_config == "tertiary":
+        llm_model = os.environ.get("TERTIARY_LLM_MODEL")
+        llm_key = os.environ.get("TERTIARY_LLM_KEY")
+    
+    if model_config == "primary" or not model_config or not llm_model or not llm_key:
+        # Default to primary model if not specified or if secondary/tertiary models are not set
+        activity.logger.warning(f"Using default primary LLM model and key for analysis.")
+        model_config = "primary"
+        llm_model = os.environ.get("LLM_MODEL")
+        llm_key = os.environ.get("LLM_KEY")
+
     if not llm_model or not llm_key:
-        exception_message = f"LLM model or key not found in environment variables."
+        exception_message = f"LLM model or key not found in environment variables for model: {model_config}."
         activity.logger.error(exception_message)
         raise ApplicationError(exception_message)
 
