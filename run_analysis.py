@@ -17,7 +17,7 @@ parser.add_argument(
 args = parser.parse_args() 
 
 async def main(proposalname: str) -> None:
-    """Run """
+    """Run the Consensus Underwriting Analysis Workflow. """
     
     # Load environment variables
     load_dotenv(override=True)
@@ -27,7 +27,8 @@ async def main(proposalname: str) -> None:
     client = await get_temporal_client()
 
     # Start the workflow with an initial prompt
-    #todo set this for the proposal name
+    
+    #todo have the analyses be passed in as a list of dicts, each with a model_config and additional_instructions
     start_msg = {
         "prompt": "Analyze and repair the orders in the order system.",
         "metadata": {
@@ -35,6 +36,24 @@ async def main(proposalname: str) -> None:
             "system": "temporal-underwriting-consensus-agent",
         },
         "proposalname": proposalname,
+        "analyses_configs": [ # Define the models and instructions for each analysis
+            # Each dict here represents a different analysis configuration
+            # The model_config can be used to select the appropriate LLM model
+            # The additional_instructions can be used to provide specific guidance for each analysis
+            # make sure you have the LLM keys configured in your .env file
+            {
+                "model": "openai/gpt-4o",
+                "additional_instructions": "",
+            },
+            {
+                "model": "openai/gpt-4.1-mini",
+                "additional_instructions": "The company guidance is to be more restrictive on underwriting, so assume no risk mitigations are implemented when you do your analysis.",
+            },
+            {
+                "model": "openai/gpt-4o-mini",
+                "additional_instructions": "Assume all risk mitigations are implemented.",
+            },
+        ],
     }
     
     handle = await client.start_workflow(

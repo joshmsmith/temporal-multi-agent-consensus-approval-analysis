@@ -12,13 +12,18 @@ from temporalio.exceptions import ApplicationError
 from shared.config import TEMPORAL_TASK_QUEUE, get_temporal_client
 from markdown_pdf import MarkdownPdf, Section
 
-
+DEFAULT_MODEL: str = "openai/gpt-4o"
 load_dotenv(override=True)
 
 @activity.defn
 async def analyze(input: dict) -> dict:
     """Analyze a proposal for underwriting suitability.
-    Is an agentic activity that uses an LLM to analyze the proposal."""
+    Is an agentic activity that uses an LLM to analyze the proposal.
+    Input should include:
+    - proposalname: The name of the proposal to analyze (for demo needs to be a valid file in the proposals directory) - e.g. "bebop"
+    - additional_instructions: Additional instructions for the analysis, e.g. "Assume no risk mitigations are implemented."
+    - model_config: The model to use for the analysis, e.g. "primary", "secondary", "tertiary".
+    """
     # Extract the proposal and prompt from the input
     proposalname = input.get("proposalname", "")
     additional_instructions = input.get("additional_instructions", "")
@@ -27,27 +32,27 @@ async def analyze(input: dict) -> dict:
     rate_tier_contents = load_rate_tiers()
     rating_criteria_contents = load_rating_criteria()
     activity.logger.debug(f"Proposal contents loaded: {proposal_contents[:100]}...")  # Log first 100 characters for brevity
+    activity.logger.debug(f"Rate tier contents loaded: {rate_tier_contents[:100]}...")  # Log first 100 characters for brevity
+    activity.logger.debug(f"Rating criteria contents loaded: {rating_criteria_contents[:100]}...")  # Log first 100 characters for brevity
 
-    
-    # Use the LLM to detect issues in the orders
     # Get the LLM model and key from environment variables
-    model_config = input.get("model_config", "primary")
-    if model_config == "secondary":
-        llm_model = os.environ.get("SECONDARY_LLM_MODEL")
-        llm_key = os.environ.get("SECONDARY_LLM_KEY")
-    elif model_config == "tertiary":
-        llm_model = os.environ.get("TERTIARY_LLM_MODEL")
-        llm_key = os.environ.get("TERTIARY_LLM_KEY")
+    llm_model = input.get("model_config", DEFAULT_MODEL)
+    # use the model to get the appropriate LLM key
+    # model will be something like "openai/gpt-4o", key environment variable will be OPENAI_LLM_KEY
+    # get the model prefix before the first slash
+    model_prefix = llm_model.split("/")[0]
+
+    llm_key = os.environ.get(f"{model_prefix.upper()}_LLM_KEY", "")
     
-    if model_config == "primary" or not model_config or not llm_model or not llm_key:
-        # Default to primary model if not specified or if secondary/tertiary models are not set
+    
+    if not llm_model or not llm_key:
+        # Default to openai model if not specified 
         activity.logger.warning(f"Using default primary LLM model and key for analysis.")
-        model_config = "primary"
         llm_model = os.environ.get("LLM_MODEL")
         llm_key = os.environ.get("LLM_KEY")
 
     if not llm_model or not llm_key:
-        exception_message = f"LLM model or key not found in environment variables for model: {model_config}."
+        exception_message = f"LLM model or key not found in environment variables for model: {llm_model}."
         activity.logger.error(exception_message)
         raise ApplicationError(exception_message)
 
