@@ -9,7 +9,8 @@ from temporalio.common import RetryPolicy
 from temporalio.exceptions import ActivityError, ApplicationError
 
 with workflow.unsafe.imports_passed_through():
-    from activities import analyze
+    from activities import analyze_proposal_agent
+    from activities import create_consensus_agent
     from activities import DEFAULT_MODEL
 
 
@@ -45,6 +46,7 @@ class ConsensusUnderwritingAnalysisWorkflow:
         self.context["metadata"] = inputs.get("metadata", {})
         self.context["proposalname"] = inputs.get("proposalname", "")
         self.context["analyses_configs"] = inputs.get("analyses_configs", [])
+        self.context["consensus_model"] = inputs.get("consensus_model", DEFAULT_MODEL)
         if not self.context["proposalname"] or not isinstance(self.context["proposalname"], str) or not self.context["analyses_configs"]:
             raise ApplicationError("Incorrect inputs to run this Workflow.")
         
@@ -115,13 +117,15 @@ class ConsensusUnderwritingAnalysisWorkflow:
         
         workflow.logger.info("Starting analysis of proposal: %s with model", proposalname, model)
 
+        #todo try/except and just store "no result found" if the activity fails
+
         activity_input: dict = {
             "proposalname": proposalname,
             "additional_instructions": additional_instructions,
             "model_config": model,
         }
         analysis_results: dict = await workflow.execute_activity(
-            analyze,
+            analyze_proposal_agent,
             activity_input,
             start_to_close_timeout=timedelta(minutes=5),
             retry_policy=RetryPolicy(
@@ -142,9 +146,27 @@ class ConsensusUnderwritingAnalysisWorkflow:
         
         if not self.context["underwriting_results"]:
             raise ApplicationError("No underwriting results found to build consensus.")
+        workflow.logger.info(f"Building consensus from underwriting results: {self.context['underwriting_results']}")
+        consensus_inputs = {
+            "underwriting_results": self.context["underwriting_results"],
+            "model_config": self.context["consensus_model"],
+            "proposalname": self.context["proposalname"],
+            "metadata": self.context["metadata"],
+        }
         
+        consensus_results: dict = await workflow.execute_activity(
+            create_consensus_agent,
+            consensus_inputs,
+            start_to_close_timeout=timedelta(minutes=5),
+            retry_policy=RetryPolicy(
+                initial_interval=timedelta(seconds=1),
+                maximum_interval=timedelta(seconds=30),  
+            ),
+            heartbeat_timeout=timedelta(seconds=20),
+        )
+
         # For now, just use the last analysis result as the consensus result
-        self.context["consensus_underwriting_result"] = self.context["underwriting_results"][-1]
+        self.context["consensus_underwriting_result"] = consensus_results
         
         workflow.logger.info(f"Consensus underwriting result: {self.context['consensus_underwriting_result']}")
         

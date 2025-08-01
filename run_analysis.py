@@ -43,17 +43,21 @@ async def main(proposalname: str) -> None:
             # make sure you have the LLM keys configured in your .env file
             {
                 "model": "openai/gpt-4o",
-                "additional_instructions": "",
+                "additional_instructions": "You are a wildcat underwriter - making crazy decisions that are not in line with company policy. Assume all risk mitigations are implemented.",
+                "analysis_agent_name": "Antonio"
             },
             {
-                "model": "openai/gpt-4.1-mini",
+                "model": "moonshotai/kimi-k2-instruct", #"openai/gpt-4.1-mini", # moonshotai/kimi-k2-instruct
                 "additional_instructions": "The company guidance is to be more restrictive on underwriting, so assume no risk mitigations are implemented when you do your analysis.",
+                "analysis_agent_name": "Carlos"
             },
             {
-                "model": "openai/gpt-4o-mini",
+                "model": "groq/llama-3.3-70b-versatile", # openai/gpt-4o-mini
                 "additional_instructions": "Assume all risk mitigations are implemented.",
+                "analysis_agent_name": "Jobim"
             },
         ],
+        "consensus_model": "openai/gpt-4o-mini",  # Model to use for consensus analysis
     }
     
     handle = await client.start_workflow(
