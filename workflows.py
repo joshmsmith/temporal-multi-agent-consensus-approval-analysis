@@ -49,6 +49,7 @@ class ConsensusUnderwritingAnalysisWorkflow:
         self.context["consensus_model"] = inputs.get("consensus_model", DEFAULT_MODEL)
         if not self.context["proposalname"] or not isinstance(self.context["proposalname"], str) or not self.context["analyses_configs"]:
             raise ApplicationError("Incorrect inputs to run this Workflow.")
+        self.context["pretty_proposalname"] = self.context["proposalname"].replace("_", " ").title()
         
         workflow.logger.debug(f"Starting repair workflow with inputs: {inputs}")
 
@@ -96,11 +97,13 @@ class ConsensusUnderwritingAnalysisWorkflow:
         for analysis_config in self.context["analyses_configs"]:
             model_config = analysis_config.get("model", DEFAULT_MODEL)
             additional_instructions = analysis_config.get("additional_instructions", "")
+            agent_name = analysis_config.get("analysis_agent_name", "DefaultAgent")
             
             # Call the analyze_proposal method with the current model configuration
             await self.analyze_proposal(proposalname=self.context["proposalname"],
                                         model=model_config,
-                                        additional_instructions=additional_instructions)
+                                        additional_instructions=additional_instructions,
+                                        agent_name=agent_name)
         
         self.set_workflow_status("PROPOSAL_ANALYZED")
         
@@ -108,7 +111,7 @@ class ConsensusUnderwritingAnalysisWorkflow:
         
 
 
-    async def analyze_proposal(self, proposalname: str, model: str, additional_instructions: str) -> None:
+    async def analyze_proposal(self, proposalname: str, model: str, additional_instructions: str, agent_name: str) -> None:
         """Analyze a proposal for underwriting suitability.
         Calls an activity to durably execute the agentic analysis.
         Stores the results in the context["underwriting_results"] array."""
@@ -123,10 +126,12 @@ class ConsensusUnderwritingAnalysisWorkflow:
             "proposalname": proposalname,
             "additional_instructions": additional_instructions,
             "model_config": model,
+            "agent_name": agent_name,
         }
         analysis_results: dict = await workflow.execute_activity(
             analyze_proposal_agent,
             activity_input,
+            summary=f"{model.split("/")[1]}/{agent_name}",
             start_to_close_timeout=timedelta(minutes=5),
             retry_policy=RetryPolicy(
                 initial_interval=timedelta(seconds=1),
@@ -154,9 +159,11 @@ class ConsensusUnderwritingAnalysisWorkflow:
             "metadata": self.context["metadata"],
         }
         
+        
         consensus_results: dict = await workflow.execute_activity(
             create_consensus_agent,
             consensus_inputs,
+            summary=f"For: {self.context['pretty_proposalname']}",
             start_to_close_timeout=timedelta(minutes=5),
             retry_policy=RetryPolicy(
                 initial_interval=timedelta(seconds=1),
