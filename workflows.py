@@ -13,11 +13,9 @@ with workflow.unsafe.imports_passed_through():
     from activities import create_consensus_agent
     from activities import DEFAULT_MODEL
 
-
-
-
-# todo add a workflow to generate more proposals
-# todo add a workflow and data sources and mcp  to get all the proposals assigned to me
+#TODO add a workflow and data sources and mcp  to get all the proposals assigned to me
+#TODO add a workflow to review and approve proposals
+#TODO add a workflow to generate more proposals?
 
 '''Workflow for multi-agent consensus/approval/analysis.
 This workflow coordinates multiple agents to analyze and discern about underwriting proposals.'''
