@@ -43,19 +43,34 @@ async def main(proposalname: str) -> None:
             # make sure you have the LLM keys configured in your .env file
             {
                 "model": "openai/gpt-4o",
-                "additional_instructions": "You are a wildcat underwriter - making crazy decisions that are not in line with company policy. Assume all risk mitigations are implemented.",
+                "additional_instructions": "",
                 "analysis_agent_name": "Antonio"
             },
             {
-                "model": "moonshotai/kimi-k2-instruct", #"openai/gpt-4.1-mini", # moonshotai/kimi-k2-instruct
+                "model": "moonshotai/kimi-k2-instruct", 
                 "additional_instructions": "The company guidance is to be more restrictive on underwriting, so assume no risk mitigations are implemented when you do your analysis.",
                 "analysis_agent_name": "Carlos"
             },
             {
-                "model": "groq/llama-3.3-70b-versatile", # openai/gpt-4o-mini
+                "model": "groq/llama-3.3-70b-versatile", 
                 "additional_instructions": "Assume all risk mitigations are implemented.",
                 "analysis_agent_name": "Jobim"
             },
+            # {
+            #     "model": "openai/gpt-4o-mini",
+            #     "additional_instructions": "Nothing good ever happened to me when I trusted others.",
+            #     "analysis_agent_name": "Faye"
+            # },
+            # {
+            #     "model": "openai/gpt-4.1-mini",
+            #     "additional_instructions": "“Humans are meant to work and sweat to earn a living. Those that try to get rich quick or live at the expense of others, all get divine retributions somewhere along the line. That's the lesson.",
+            #     "analysis_agent_name": "Jet"
+            # },
+            # {
+            #     "model": "openai/gpt-4o-mini",
+            #     "additional_instructions": "Whatever happens, happens.",
+            #     "analysis_agent_name": "Spike"
+            # },
         ],
         "consensus_model": "openai/gpt-4o-mini",  # Model to use for consensus analysis
     }
@@ -63,7 +78,7 @@ async def main(proposalname: str) -> None:
     handle = await client.start_workflow(
         ConsensusUnderwritingAnalysisWorkflow.run,
         start_msg,
-        id=f"underwriting-analysis-{proposalname}-{user}",
+        id=f"underwriting-analysis-{proposalname}",
         task_queue=TEMPORAL_TASK_QUEUE,
     )
     print(f"{user}'s proposal analyis started with: {handle.id}")
